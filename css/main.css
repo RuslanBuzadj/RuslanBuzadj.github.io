@@ -477,7 +477,8 @@ h5 {
   text-align: center;
   color: #f9f9f9;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.2em;
   font-weight: 500;
   letter-spacing: 0.045em;
   width: 100%;
@@ -793,6 +794,9 @@ h5 {
 
 .section-rail-transportation {
   padding: 90px 0 90px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   color: #fff;
   position: relative;
 }
@@ -1045,6 +1049,11 @@ h5 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 55%;
           flex: 0 0 55%;
+}
+
+.map-wrapp iframe {
+  height: 100%;
+  width: 100%;
 }
 
 .footer-text {
@@ -1554,6 +1563,11 @@ h5 {
   .header {
     height: auto;
   }
+
+  .header__title {
+    text-align: start;
+    margin-bottom: 90px;
+  }
 }
 
 @media (max-width: 550px) {
@@ -1576,11 +1590,6 @@ h5 {
     width: 100%;
   }
 
-  .header__title {
-    text-align: start;
-    margin-bottom: 20px;
-  }
-
   .offer__text {
     margin-bottom: 8px;
   }
@@ -1598,10 +1607,6 @@ h5 {
 }
 
 @media (max-width: 400px) {
-  .map-wrapp {
-    height: 200px;
-  }
-
   .footer-connect {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
