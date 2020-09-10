@@ -179,6 +179,7 @@ h5 {
   transition: all 1s;
   letter-spacing: 0.05em;
   border-radius: 50px;
+  text-align: center;
 }
 
 .btn-form {
@@ -529,6 +530,20 @@ h5 {
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+}
+
+.header::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: -o-linear-gradient(89.18deg, rgba(0, 3, 6, 0.82) 29.08%, rgba(0, 3, 6, 0) 72.35%, rgba(31, 31, 31, 0.94) 99.14%);
+  background: linear-gradient(0.82deg, rgba(0, 3, 6, 0.82) 29.08%, rgba(0, 3, 6, 0) 72.35%, rgba(31, 31, 31, 0.94) 99.14%);
+  opacity: 0.52;
 }
 
 .header .wrapp-burger {
@@ -555,6 +570,8 @@ h5 {
       -ms-flex-pack: justify;
           justify-content: space-between;
   height: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .header .container {
@@ -563,11 +580,31 @@ h5 {
 
 .header__title {
   text-align: center;
-  font-size: 24px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 50%;
+          flex: 0 0 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.header__title p {
+  font-size: 20px;
+  max-width: 700px;
+  line-height: 1.2em;
+  margin: 20px auto 0px;
 }
 
 .offer {
   width: 100%;
+  position: relative;
 }
 
 .offer__text {
@@ -1018,6 +1055,31 @@ h5 {
   margin-bottom: 35px;
 }
 
+.about-partnes {
+  margin-top: 30px;
+}
+
+.about-partnes__list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.about-partnes__list li {
+  margin-bottom: 30px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 21%;
+          flex: 0 0 21%;
+}
+
 .footer {
   padding: 80px 0 0;
   background-color: #2A2C31;
@@ -1195,6 +1257,7 @@ h5 {
   position: fixed;
   bottom: 82px;
   right: 10px;
+  z-index: 50;
 }
 
 @media (max-width: 1309px) {
@@ -1566,7 +1629,7 @@ h5 {
 
   .header__title {
     text-align: start;
-    margin-bottom: 90px;
+    padding: 50px 0;
   }
 }
 
@@ -1576,6 +1639,12 @@ h5 {
     -webkit-box-flex: 0;
         -ms-flex: 0 0 100%;
             flex: 0 0 100%;
+  }
+
+  .about-partnes__list li {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 30%;
+            flex: 0 0 30%;
   }
 }
 
