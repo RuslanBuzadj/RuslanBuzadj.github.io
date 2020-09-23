@@ -1022,7 +1022,6 @@ h5 {
       -ms-flex-align: start;
           align-items: flex-start;
   border-bottom: 1px solid #DDDDDD;
-  padding-bottom: 50px;
 }
 
 .about-conpany__item {
@@ -1032,7 +1031,7 @@ h5 {
 }
 
 .about-conpany__title {
-  margin-bottom: 95px;
+  margin-bottom: 50px;
 }
 
 .about-conpany__title span {
@@ -1041,6 +1040,11 @@ h5 {
 
 .about-conpany__img {
   overflow: hidden;
+}
+
+.about-conpany__img img {
+  max-width: 250px;
+  width: 100%;
 }
 
 .about-conpany__text {
