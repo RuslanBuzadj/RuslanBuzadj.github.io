@@ -524,7 +524,7 @@ h5 {
 }
 
 .header {
-  padding-top: 72px;
+  padding-top: 40px;
   color: #f9f9f9;
   height: 100vh;
   position: relative;
@@ -590,37 +590,21 @@ h5 {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
 
 .header__title p {
   font-size: 20px;
   max-width: 700px;
   line-height: 1.2em;
-  margin: 20px auto 0px;
+  margin: 10px auto 0px;
 }
 
 .offer {
   width: 100%;
   position: relative;
-}
-
-.offer__text {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin-bottom: 19px;
-}
-
-.offer__text li {
-  max-width: 459px;
-  line-height: 26px;
-}
-
-.offer__text li:not(:last-child) {
-  margin-right: 70px;
 }
 
 .form-block-wrapp {
@@ -1007,11 +991,8 @@ h5 {
   margin-top: 36px;
 }
 
-.section-about {
-  padding: 100px 0 60px;
-}
-
 .about-conpany {
+  padding: 100px 0 40px 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1022,6 +1003,9 @@ h5 {
       -ms-flex-align: start;
           align-items: flex-start;
   border-bottom: 1px solid #DDDDDD;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 433px;
 }
 
 .about-conpany__item {
@@ -1060,6 +1044,7 @@ h5 {
 }
 
 .about-partnes {
+  padding: 0 0 60px 0;
   margin-top: 30px;
 }
 
@@ -1080,8 +1065,8 @@ h5 {
 .about-partnes__list li {
   margin-bottom: 30px;
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 21%;
-          flex: 0 0 21%;
+      -ms-flex: 0 0 17%;
+          flex: 0 0 17%;
 }
 
 .footer {
@@ -1349,12 +1334,6 @@ h5 {
   }
 }
 
-@media (max-width: 1085px) {
-  .offer__text li:not(:last-child) {
-    margin-right: 40px;
-  }
-}
-
 @media (max-width: 992.98px) {
   h1 {
     font-size: 30px;
@@ -1374,10 +1353,6 @@ h5 {
 
   .nav__list li a img {
     margin-bottom: 12px;
-  }
-
-  .offer__text li {
-    max-width: 300px;
   }
 
   .form-block-wrapp {
@@ -1438,10 +1413,6 @@ h5 {
 
   .storage-of-goods__img {
     margin-bottom: 20px;
-  }
-
-  .about-conpany {
-    padding-bottom: 10px;
   }
 
   .about-conpany {
@@ -1586,30 +1557,16 @@ h5 {
     padding-bottom: 50px;
   }
 
-  .section-about {
-    padding-top: 50px;
+  .about-conpany {
+    padding: 50px 0 40px 0;
+  }
+
+  .about-partnes {
     padding-bottom: 30px;
   }
 
   .footer {
     padding: 50px 0 0;
-  }
-}
-
-@media (max-width: 717px) {
-  .offer__text {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-  }
-
-  .offer__text li:not(:last-child) {
-    margin-bottom: 15px;
-  }
-
-  .offer__text li {
-    max-width: 100%;
   }
 }
 
@@ -1627,13 +1584,18 @@ h5 {
     height: 40px;
   }
 
+  .header::after {
+    background: -o-linear-gradient(89.18deg, rgba(0, 3, 6, 0.82) 29.08%, rgba(31, 31, 31, 0.94) 99.14%);
+    background: linear-gradient(0.82deg, rgba(0, 3, 6, 0.82) 29.08%, rgba(31, 31, 31, 0.94) 99.14%);
+  }
+
   .header {
     height: auto;
   }
 
   .header__title {
     text-align: start;
-    padding: 50px 0;
+    padding: 30px 0 50px 0;
   }
 }
 
@@ -1643,6 +1605,10 @@ h5 {
     -webkit-box-flex: 0;
         -ms-flex: 0 0 100%;
             flex: 0 0 100%;
+  }
+
+  .about-conpany {
+    background-position: center;
   }
 
   .about-partnes__list li {
@@ -1661,14 +1627,6 @@ h5 {
 @media (max-width: 500px) {
   .btn-form {
     width: 100%;
-  }
-
-  .offer__text {
-    margin-bottom: 8px;
-  }
-
-  .offer__text li:not(:last-child) {
-    margin-bottom: 8px;
   }
 
   .form-block-wrapp .form .input {
@@ -1739,14 +1697,6 @@ h5 {
 
 }
 
- @media (max-width: 1085px){
-
-@supports (-webkit-appearance:none){
-
-}
-
-}
-
  @media (max-width: 992.98px){
 
 @supports (-webkit-appearance:none){
@@ -1764,14 +1714,6 @@ h5 {
 }
 
  @media (max-width: 767.98px){
-
-@supports (-webkit-appearance:none){
-
-}
-
-}
-
- @media (max-width: 717px){
 
 @supports (-webkit-appearance:none){
 
