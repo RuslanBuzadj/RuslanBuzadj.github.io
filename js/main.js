@@ -179,7 +179,7 @@
             });
         }
     });
-});
+});;
 // Webp ====================================================================
 function testWebP(callback) {
 
@@ -199,6 +199,31 @@ function testWebP(callback) {
         document.querySelector('body').classList.add('no-webp');
     }
 });
+
+  function progressBarrUse () {
+    const progress = document.querySelector('.progressbar');
+    
+    function progressBarr  (e) {
+      let windowScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      let windowHeigth = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      let per = windowScroll / windowHeigth * 100 ;
+
+      progress.style.width = per + '%';
+    }
+    window.addEventListener('scroll' , progressBarr);
+  }
+  progressBarrUse ();  
+
+  function watchTextarea () {
+      const textarea = document.querySelector('.textarea');
+      const textareaLenght = document.querySelector('.textarea-lenght');
+      const replaseTextareaLenght = () => {
+        textareaLenght.textContent = '';
+        textareaLenght.textContent = String(textarea.value.length);        
+      }
+      textarea.addEventListener('input', replaseTextareaLenght);
+  }
+  watchTextarea ();
 // /Webp ====================================================================
 
 // var map;
@@ -218,11 +243,7 @@ function testWebP(callback) {
 //   });
 
 $(function(){
-    $('.header__burger').click(function(){
-        $('.header__burger, .nav, .content').toggleClass('active'); 
-        $('body').toggleClass('lock');       
-    });
-
+    
     $('input[type="tel"]').mask("+7 (999) 999-99-99");
     
     // прокрутка к якорю
@@ -248,15 +269,15 @@ $(function(){
         return false;
     });
 
-    $('.add-services-slider').slick({
-        centerMode: true,
+    $('.problem__slider').slick({
+        centerMode: true,        
         centerPadding: '60px',
-        slidesToShow: 3,        
-        prevArrow: '<button type="button" class="slick-prev"><img src="./img/svg/arrow-pref.svg" alt=""></button>',
-        nextArrow: '<button type="button" class="slick-next"><img src="./img/svg/arrow-next.svg" alt=""></button>',
+        slidesToShow: 5,        
+        prevArrow: `<button type="button" class="slick-prev"><img src="../img/image/arrow-left.png" alt=""></button>`,
+        nextArrow: `<button type="button" class="slick-next"><img src="../img/image/arrow-right.png" alt=""></button>`,
         responsive: [
           {
-            breakpoint: 992,
+            breakpoint: 1600,
             settings: {
               arrows: true,
               centerMode: true,
@@ -265,10 +286,30 @@ $(function(){
             }
           },
           {
-            breakpoint: 600,
+            breakpoint: 992,
             settings: {
               arrows: true,
-              centerMode: true,
+              centerMode: false,
+              centerPadding: '40px',
+              slidesToShow: 3
+            }
+          },
+          {
+            breakpoint: 880,
+            settings: {
+              arrows: false,
+              centerMode: false,
+              dots:true,
+              centerPadding: '40px',
+              slidesToShow: 2
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              arrows: false,
+              dots:true,
+              centerMode: false,
               centerPadding: '40px',
               slidesToShow: 1
             }
@@ -276,23 +317,37 @@ $(function(){
         ]
       });
    
+    // acordeon
+  
+  $('.accordion-list > li > .answer').hide();
+    
+  $('.accordion-list > li').click(function() {
+    if ($(this).hasClass("active")) {
+      $(this).removeClass("active").find(".answer").slideUp();
+    } else {
+      $(".accordion-list > li.active .answer").slideUp();
+      $(".accordion-list > li.active").removeClass("active");
+      $(this).addClass("active").find(".answer").slideDown();
+    }
+    return false;
+  });
 	       
      
 });
 
-var wow = new WOW(
-  {
-    boxClass:     'wow',      // animated element css class (default is wow)
-    animateClass: 'animated', // animation css class (default is animated)
-    offset:       0,          // distance to the element when triggering the animation (default is 0)
-    mobile:       true,       // trigger animations on mobile devices (default is true)
-    live:         true,       // act on asynchronously loaded content (default is true)
-    callback:     function(box) {
-      // the callback is fired every time an animation is started
-      // the argument that is passed in is the DOM node being animated
-    },
-    scrollContainer: null,    // optional scroll container selector, otherwise use window,
-    resetAnimation: true,     // reset animation on end (default is true)
-  }
-);
-wow.init();
+// var wow = new WOW(
+//   {
+//     boxClass:     'wow',      // animated element css class (default is wow)
+//     animateClass: 'animated', // animation css class (default is animated)
+//     offset:       0,          // distance to the element when triggering the animation (default is 0)
+//     mobile:       true,       // trigger animations on mobile devices (default is true)
+//     live:         true,       // act on asynchronously loaded content (default is true)
+//     callback:     function(box) {
+//       // the callback is fired every time an animation is started
+//       // the argument that is passed in is the DOM node being animated
+//     },
+//     scrollContainer: null,    // optional scroll container selector, otherwise use window,
+//     resetAnimation: true,     // reset animation on end (default is true)
+//   }
+// );
+// wow.init();
