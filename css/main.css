@@ -645,14 +645,6 @@ h5 {
   width: 100%;
 }
 
-.header__img {
-  position: absolute;
-  right: 0;
-  top: 5%;
-  -webkit-filter: drop-shadow(90px 134px 74px rgba(0, 0, 0, 0.19));
-          filter: drop-shadow(90px 134px 74px rgba(0, 0, 0, 0.19));
-}
-
 .privilage {
   padding: 195px 0;
   position: relative;
@@ -993,10 +985,26 @@ h5 {
 }
 
 .form-section {
-  padding: 50px 0;
+  padding: 100px 0;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.form-section__body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+}
+
+.form-section__img {
+  position: absolute;
+  left: 0;
+  top: -40%;
+  z-index: 5;
+  -webkit-filter: drop-shadow(90px 134px 74px rgba(0, 0, 0, 0.19));
+          filter: drop-shadow(90px 134px 74px rgba(0, 0, 0, 0.19));
 }
 
 .form {
@@ -1159,10 +1167,9 @@ h5 {
   width: 25px;
   height: 25px;
   padding: 5px 10px;
-  background: #4282FF;
   -webkit-box-shadow: 0px 10px 27px rgba(0, 0, 0, 0.12);
           box-shadow: 0px 10px 27px rgba(0, 0, 0, 0.12);
-  background: url(../img/image/lightning.png) center no-repeat;
+  background: #4282FF url(../img/image/lightning.png) center no-repeat;
   border-radius: 50px;
   position: absolute;
   left: 0;
@@ -1621,8 +1628,8 @@ ul.accordion-list li div.answer p {
     max-width: 970px;
   }
 
-  .header__img {
-    right: -120px;
+  .form-section__img {
+    left: -120px;
   }
 
   .partners__list {
@@ -1687,10 +1694,6 @@ ul.accordion-list li div.answer p {
   .header__logo {
     margin-bottom: 50px;
     max-width: 200px;
-  }
-
-  .header__img {
-    display: none;
   }
 
   .privilage {
@@ -1767,6 +1770,14 @@ ul.accordion-list li div.answer p {
 
   .howtouse__item:not(:last-child) {
     margin-bottom: 15px;
+  }
+
+  .form-section {
+    padding: 50px 0;
+  }
+
+  .form-section__img {
+    display: none;
   }
 
   .form__subtitle {
@@ -2044,7 +2055,7 @@ ul.accordion-list li div.answer p {
 }
 @supports (-webkit-appearance:none){
 .howtouse__item::after{background:url(../img/image/lightning.webp) center no-repeat}
-.bonuses__item::after{background:url(../img/image/lightning.webp) center no-repeat}
+.bonuses__item::after{background:#4282FF url(../img/image/lightning.webp) center no-repeat}
 .documents__files-img span:before{background:url(../img/image/download.webp) center no-repeat}
 }
 
