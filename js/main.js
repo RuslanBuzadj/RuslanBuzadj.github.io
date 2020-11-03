@@ -1,185 +1,25 @@
 /*
-    jQuery Masked Input Plugin
-    Copyright (c) 2007 - 2015 Josh Bush (digitalbush.com)
-    Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
-    Version: 1.4.1
-*/
-!function(factory) {
-    "function" == typeof define && define.amd ? define([ "jquery" ], factory) : factory("object" == typeof exports ? require("jquery") : jQuery);
-}(function($) {
-    var caretTimeoutId, ua = navigator.userAgent, iPhone = /iphone/i.test(ua), chrome = /chrome/i.test(ua), android = /android/i.test(ua);
-    $.mask = {
-        definitions: {
-            "9": "[0-9]",
-            a: "[A-Za-z]",
-            "*": "[A-Za-z0-9]"
-        },
-        autoclear: !0,
-        dataName: "rawMaskFn",
-        placeholder: "_"
-    }, $.fn.extend({
-        caret: function(begin, end) {
-            var range;
-            if (0 !== this.length && !this.is(":hidden")) return "number" == typeof begin ? (end = "number" == typeof end ? end : begin, 
-            this.each(function() {
-                this.setSelectionRange ? this.setSelectionRange(begin, end) : this.createTextRange && (range = this.createTextRange(), 
-                range.collapse(!0), range.moveEnd("character", end), range.moveStart("character", begin), 
-                range.select());
-            })) : (this[0].setSelectionRange ? (begin = this[0].selectionStart, end = this[0].selectionEnd) : document.selection && document.selection.createRange && (range = document.selection.createRange(), 
-            begin = 0 - range.duplicate().moveStart("character", -1e5), end = begin + range.text.length), 
-            {
-                begin: begin,
-                end: end
-            });
-        },
-        unmask: function() {
-            return this.trigger("unmask");
-        },
-        mask: function(mask, settings) {
-            var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal;
-            if (!mask && this.length > 0) {
-                input = $(this[0]);
-                var fn = input.data($.mask.dataName);
-                return fn ? fn() : void 0;
-            }
-            return settings = $.extend({
-                autoclear: $.mask.autoclear,
-                placeholder: $.mask.placeholder,
-                completed: null
-            }, settings), defs = $.mask.definitions, tests = [], partialPosition = len = mask.length, 
-            firstNonMaskPos = null, $.each(mask.split(""), function(i, c) {
-                "?" == c ? (len--, partialPosition = i) : defs[c] ? (tests.push(new RegExp(defs[c])), 
-                null === firstNonMaskPos && (firstNonMaskPos = tests.length - 1), partialPosition > i && (lastRequiredNonMaskPos = tests.length - 1)) : tests.push(null);
-            }), this.trigger("unmask").each(function() {
-                function tryFireCompleted() {
-                    if (settings.completed) {
-                        for (var i = firstNonMaskPos; lastRequiredNonMaskPos >= i; i++) if (tests[i] && buffer[i] === getPlaceholder(i)) return;
-                        settings.completed.call(input);
-                    }
-                }
-                function getPlaceholder(i) {
-                    return settings.placeholder.charAt(i < settings.placeholder.length ? i : 0);
-                }
-                function seekNext(pos) {
-                    for (;++pos < len && !tests[pos]; ) ;
-                    return pos;
-                }
-                function seekPrev(pos) {
-                    for (;--pos >= 0 && !tests[pos]; ) ;
-                    return pos;
-                }
-                function shiftL(begin, end) {
-                    var i, j;
-                    if (!(0 > begin)) {
-                        for (i = begin, j = seekNext(end); len > i; i++) if (tests[i]) {
-                            if (!(len > j && tests[i].test(buffer[j]))) break;
-                            buffer[i] = buffer[j], buffer[j] = getPlaceholder(j), j = seekNext(j);
-                        }
-                        writeBuffer(), input.caret(Math.max(firstNonMaskPos, begin));
-                    }
-                }
-                function shiftR(pos) {
-                    var i, c, j, t;
-                    for (i = pos, c = getPlaceholder(pos); len > i; i++) if (tests[i]) {
-                        if (j = seekNext(i), t = buffer[i], buffer[i] = c, !(len > j && tests[j].test(t))) break;
-                        c = t;
-                    }
-                }
-                function androidInputEvent() {
-                    var curVal = input.val(), pos = input.caret();
-                    if (oldVal && oldVal.length && oldVal.length > curVal.length) {
-                        for (checkVal(!0); pos.begin > 0 && !tests[pos.begin - 1]; ) pos.begin--;
-                        if (0 === pos.begin) for (;pos.begin < firstNonMaskPos && !tests[pos.begin]; ) pos.begin++;
-                        input.caret(pos.begin, pos.begin);
-                    } else {
-                        for (checkVal(!0); pos.begin < len && !tests[pos.begin]; ) pos.begin++;
-                        input.caret(pos.begin, pos.begin);
-                    }
-                    tryFireCompleted();
-                }
-                function blurEvent() {
-                    checkVal(), input.val() != focusText && input.change();
-                }
-                function keydownEvent(e) {
-                    if (!input.prop("readonly")) {
-                        var pos, begin, end, k = e.which || e.keyCode;
-                        oldVal = input.val(), 8 === k || 46 === k || iPhone && 127 === k ? (pos = input.caret(), 
-                        begin = pos.begin, end = pos.end, end - begin === 0 && (begin = 46 !== k ? seekPrev(begin) : end = seekNext(begin - 1), 
-                        end = 46 === k ? seekNext(end) : end), clearBuffer(begin, end), shiftL(begin, end - 1), 
-                        e.preventDefault()) : 13 === k ? blurEvent.call(this, e) : 27 === k && (input.val(focusText), 
-                        input.caret(0, checkVal()), e.preventDefault());
-                    }
-                }
-                function keypressEvent(e) {
-                    if (!input.prop("readonly")) {
-                        var p, c, next, k = e.which || e.keyCode, pos = input.caret();
-                        if (!(e.ctrlKey || e.altKey || e.metaKey || 32 > k) && k && 13 !== k) {
-                            if (pos.end - pos.begin !== 0 && (clearBuffer(pos.begin, pos.end), shiftL(pos.begin, pos.end - 1)), 
-                            p = seekNext(pos.begin - 1), len > p && (c = String.fromCharCode(k), tests[p].test(c))) {
-                                if (shiftR(p), buffer[p] = c, writeBuffer(), next = seekNext(p), android) {
-                                    var proxy = function() {
-                                        $.proxy($.fn.caret, input, next)();
-                                    };
-                                    setTimeout(proxy, 0);
-                                } else input.caret(next);
-                                pos.begin <= lastRequiredNonMaskPos && tryFireCompleted();
-                            }
-                            e.preventDefault();
-                        }
-                    }
-                }
-                function clearBuffer(start, end) {
-                    var i;
-                    for (i = start; end > i && len > i; i++) tests[i] && (buffer[i] = getPlaceholder(i));
-                }
-                function writeBuffer() {
-                    input.val(buffer.join(""));
-                }
-                function checkVal(allow) {
-                    var i, c, pos, test = input.val(), lastMatch = -1;
-                    for (i = 0, pos = 0; len > i; i++) if (tests[i]) {
-                        for (buffer[i] = getPlaceholder(i); pos++ < test.length; ) if (c = test.charAt(pos - 1), 
-                        tests[i].test(c)) {
-                            buffer[i] = c, lastMatch = i;
-                            break;
-                        }
-                        if (pos > test.length) {
-                            clearBuffer(i + 1, len);
-                            break;
-                        }
-                    } else buffer[i] === test.charAt(pos) && pos++, partialPosition > i && (lastMatch = i);
-                    return allow ? writeBuffer() : partialPosition > lastMatch + 1 ? settings.autoclear || buffer.join("") === defaultBuffer ? (input.val() && input.val(""), 
-                    clearBuffer(0, len)) : writeBuffer() : (writeBuffer(), input.val(input.val().substring(0, lastMatch + 1))), 
-                    partialPosition ? i : firstNonMaskPos;
-                }
-                var input = $(this), buffer = $.map(mask.split(""), function(c, i) {
-                    return "?" != c ? defs[c] ? getPlaceholder(i) : c : void 0;
-                }), defaultBuffer = buffer.join(""), focusText = input.val();
-                input.data($.mask.dataName, function() {
-                    return $.map(buffer, function(c, i) {
-                        return tests[i] && c != getPlaceholder(i) ? c : null;
-                    }).join("");
-                }), input.one("unmask", function() {
-                    input.off(".mask").removeData($.mask.dataName);
-                }).on("focus.mask", function() {
-                    if (!input.prop("readonly")) {
-                        clearTimeout(caretTimeoutId);
-                        var pos;
-                        focusText = input.val(), pos = checkVal(), caretTimeoutId = setTimeout(function() {
-                            input.get(0) === document.activeElement && (writeBuffer(), pos == mask.replace("?", "").length ? input.caret(0, pos) : input.caret(pos));
-                        }, 10);
-                    }
-                }).on("blur.mask", blurEvent).on("keydown.mask", keydownEvent).on("keypress.mask", keypressEvent).on("input.mask paste.mask", function() {
-                    input.prop("readonly") || setTimeout(function() {
-                        var pos = checkVal(!0);
-                        input.caret(pos), tryFireCompleted();
-                    }, 0);
-                }), chrome && android && input.off("input.mask").on("input.mask", androidInputEvent), 
-                checkVal();
-            });
-        }
-    });
-});;
+
+ arcticModal — jQuery plugin
+ Version: 0.3
+ Author: Sergey Predvoditelev (sergey.predvoditelev@gmail.com)
+ Company: Arctic Laboratory (http://arcticlab.ru/)
+
+ Docs & Examples: http://arcticlab.ru/arcticmodal/
+
+ */
+(function(d){var g={type:"html",content:"",url:"",ajax:{},ajax_request:null,closeOnEsc:!0,closeOnOverlayClick:!0,clone:!1,overlay:{block:void 0,tpl:'<div class="arcticmodal-overlay"></div>',css:{backgroundColor:"#000",opacity:0.6}},container:{block:void 0,tpl:'<div class="arcticmodal-container"><table class="arcticmodal-container_i"><tr><td class="arcticmodal-container_i2"></td></tr></table></div>'},wrap:void 0,body:void 0,errors:{tpl:'<div class="arcticmodal-error arcticmodal-close"></div>',autoclose_delay:2E3,
+ajax_unsuccessful_load:"Error"},openEffect:{type:"fade",speed:400},closeEffect:{type:"fade",speed:400},beforeOpen:d.noop,afterOpen:d.noop,beforeClose:d.noop,afterClose:d.noop,afterLoading:d.noop,afterLoadingOnShow:d.noop,errorLoading:d.noop},j=0,e=d([]),m={isEventOut:function(a,b){var c=!0;d(a).each(function(){d(b.target).get(0)==d(this).get(0)&&(c=!1);0==d(b.target).closest("HTML",d(this).get(0)).length&&(c=!1)});return c}},f={getParentEl:function(a){var b=d(a);return b.data("arcticmodal")?b:(b=
+d(a).closest(".arcticmodal-container").data("arcticmodalParentEl"))?b:!1},transition:function(a,b,c,e){e=void 0==e?d.noop:e;switch(c.type){case "fade":"show"==b?a.fadeIn(c.speed,e):a.fadeOut(c.speed,e);break;case "none":"show"==b?a.show():a.hide(),e()}},prepare_body:function(a,b){d(".arcticmodal-close",a.body).unbind("click.arcticmodal").bind("click.arcticmodal",function(){b.arcticmodal("close");return!1})},init_el:function(a,b){var c=a.data("arcticmodal");if(!c){c=b;j++;c.modalID=j;c.overlay.block=
+d(c.overlay.tpl);c.overlay.block.css(c.overlay.css);c.container.block=d(c.container.tpl);c.body=d(".arcticmodal-container_i2",c.container.block);b.clone?c.body.html(a.clone(!0)):(a.before('<div id="arcticmodalReserve'+c.modalID+'" style="display: none" />'),c.body.html(a));f.prepare_body(c,a);c.closeOnOverlayClick&&c.overlay.block.add(c.container.block).click(function(b){m.isEventOut(d(">*",c.body),b)&&a.arcticmodal("close")});c.container.block.data("arcticmodalParentEl",a);a.data("arcticmodal",c);
+e=d.merge(e,a);d.proxy(h.show,a)();if("html"==c.type)return a;if(void 0!=c.ajax.beforeSend){var k=c.ajax.beforeSend;delete c.ajax.beforeSend}if(void 0!=c.ajax.success){var g=c.ajax.success;delete c.ajax.success}if(void 0!=c.ajax.error){var l=c.ajax.error;delete c.ajax.error}var n=d.extend(!0,{url:c.url,beforeSend:function(){void 0==k?c.body.html('<div class="arcticmodal-loading" />'):k(c,a)},success:function(b){a.trigger("afterLoading");c.afterLoading(c,a,b);void 0==g?c.body.html(b):g(c,a,b);f.prepare_body(c,
+a);a.trigger("afterLoadingOnShow");c.afterLoadingOnShow(c,a,b)},error:function(){a.trigger("errorLoading");c.errorLoading(c,a);void 0==l?(c.body.html(c.errors.tpl),d(".arcticmodal-error",c.body).html(c.errors.ajax_unsuccessful_load),d(".arcticmodal-close",c.body).click(function(){a.arcticmodal("close");return!1}),c.errors.autoclose_delay&&setTimeout(function(){a.arcticmodal("close")},c.errors.autoclose_delay)):l(c,a)}},c.ajax);c.ajax_request=d.ajax(n);a.data("arcticmodal",c)}},init:function(a){a=
+d.extend(!0,{},g,a);if(d.isFunction(this))if(void 0==a)d.error("jquery.arcticmodal: Uncorrect parameters");else if(""==a.type)d.error('jquery.arcticmodal: Don\'t set parameter "type"');else switch(a.type){case "html":if(""==a.content){d.error('jquery.arcticmodal: Don\'t set parameter "content"');break}var b=a.content;a.content="";return f.init_el(d(b),a);case "ajax":if(""==a.url){d.error('jquery.arcticmodal: Don\'t set parameter "url"');break}return f.init_el(d("<div />"),a)}else return this.each(function(){f.init_el(d(this),
+d.extend(!0,{},a))})}},h={show:function(){var a=f.getParentEl(this);if(!1===a)d.error("jquery.arcticmodal: Uncorrect call");else{var b=a.data("arcticmodal");b.overlay.block.hide();b.container.block.hide();d("BODY").append(b.overlay.block);d("BODY").append(b.container.block);b.beforeOpen(b,a);a.trigger("beforeOpen");if("hidden"!=b.wrap.css("overflow")){b.wrap.data("arcticmodalOverflow",b.wrap.css("overflow"));var c=b.wrap.outerWidth(!0);b.wrap.css("overflow","hidden");var g=b.wrap.outerWidth(!0);g!=
+c&&b.wrap.css("marginRight",g-c+"px")}e.not(a).each(function(){d(this).data("arcticmodal").overlay.block.hide()});f.transition(b.overlay.block,"show",1<e.length?{type:"none"}:b.openEffect);f.transition(b.container.block,"show",1<e.length?{type:"none"}:b.openEffect,function(){b.afterOpen(b,a);a.trigger("afterOpen")});return a}},close:function(){if(d.isFunction(this))e.each(function(){d(this).arcticmodal("close")});else return this.each(function(){var a=f.getParentEl(this);if(!1===a)d.error("jquery.arcticmodal: Uncorrect call");
+else{var b=a.data("arcticmodal");!1!==b.beforeClose(b,a)&&(a.trigger("beforeClose"),e.not(a).last().each(function(){d(this).data("arcticmodal").overlay.block.show()}),f.transition(b.overlay.block,"hide",1<e.length?{type:"none"}:b.closeEffect),f.transition(b.container.block,"hide",1<e.length?{type:"none"}:b.closeEffect,function(){b.afterClose(b,a);a.trigger("afterClose");b.clone||d("#arcticmodalReserve"+b.modalID).replaceWith(b.body.find(">*"));b.overlay.block.remove();b.container.block.remove();a.data("arcticmodal",
+null);d(".arcticmodal-container").length||(b.wrap.data("arcticmodalOverflow")&&b.wrap.css("overflow",b.wrap.data("arcticmodalOverflow")),b.wrap.css("marginRight",0))}),"ajax"==b.type&&b.ajax_request.abort(),e=e.not(a))}})},setDefault:function(a){d.extend(!0,g,a)}};d(function(){g.wrap=d(document.all&&!document.querySelector?"html":"body")});d(document).bind("keyup.arcticmodal",function(a){var b=e.last();b.length&&b.data("arcticmodal").closeOnEsc&&27===a.keyCode&&b.arcticmodal("close")});d.arcticmodal=
+d.fn.arcticmodal=function(a){if(h[a])return h[a].apply(this,Array.prototype.slice.call(arguments,1));if("object"===typeof a||!a)return f.init.apply(this,arguments);d.error("jquery.arcticmodal: Method "+a+" does not exist")}})(jQuery);;
 // Webp ====================================================================
 function testWebP(callback) {
 
@@ -199,8 +39,9 @@ function testWebP(callback) {
         document.querySelector('body').classList.add('no-webp');
     }
 });
-
-  function progressBarrUse () {
+// /Webp ====================================================================
+// Progressbarr ====================================================
+function progressBarrUse () {
     const progress = document.querySelector('.progressbar');
     
     function progressBarr  (e) {
@@ -212,153 +53,107 @@ function testWebP(callback) {
     }
     window.addEventListener('scroll' , progressBarr);
   }
-  progressBarrUse ();  
-
-  function watchTextarea () {
-      const textarea = document.querySelector('.textarea');
-      const textareaLenght = document.querySelector('.textarea-lenght');
-      const replaseTextareaLenght = () => {
-        textareaLenght.textContent = '';
-        textareaLenght.textContent = String(textarea.value.length);        
-      }
-      textarea.addEventListener('input', replaseTextareaLenght);
-  }
-  watchTextarea ();
-  
-  // Initialize and add the map
-function initMap() {
-  // The location of Uluru
-  var uluru = {lat: 43.237590, lng: 76.951657};
-  // The map, centered at Uluru
-  var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 14, center: uluru});
-  // The marker, positioned at Uluru
-  // var marker = new google.maps.Marker({position: uluru, map: map});
-};
-// /Webp ====================================================================
-
-// var map;
-
-//   DG.then(function () {
-//       map = DG.map('map', {
-//           center: [43.365997, 76.795643],
-//           zoom: 16,
-//       });
-//       DG.control.location({position: 'bottomright'}).addTo(map);
-//                 DG.control.scale().addTo(map);
-//                 DG.control.ruler({position: 'bottomleft'}).addTo(map);
-//                 DG.control.traffic().addTo(map);
-
-//       var maker = DG.marker([43.365997, 76.795643]).addTo(map).bindPopup(popUp);
-         
-//   });
+  progressBarrUse (); 
+// Progressbarr ====================================================
 
 $(function(){
+    $('.open-bascket').click(function () {
+      $('#exampleModal').arcticmodal();
+    })
+    $('.open-pruct-modal').click(function () {
+      $('#product-card').arcticmodal();
+    })
     
-    $('input[type="tel"]').mask("+7 (999) 999-99-99");
+    // acordeon =====================================================
+    $('.accordion-list > li > .answer').hide();
     
-    // прокрутка к якорю
-    $('.go-to').click( function(e){ // ловим клик по ссылке с классом go_to
-        e.preventDefault();
-          var scroll_el = $(this).attr('href'); // возьмем содержимое атрибута href, должен быть селектором, т.е. например начинаться с # или .
-              if ($(scroll_el).length != 0) { // проверим существование элемента чтобы избежать ошибки
-            $('html, body').animate({ scrollTop: $(scroll_el).offset().top }, 500); // анимируем скроолинг к элементу scroll_el
-              }
-            return false; // выключаем стандартное действие
-          }); 
-
-    // слайдер
-    $('.nav__list li a').click(function () {        
-        $('.active').removeClass('active');
-        $(this).addClass('active');               
+    $('.accordion-list > li').click(function() {
+      if ($(this).hasClass("active")) {
+        $(this).removeClass("active").find(".answer").slideUp();
+      } else {
+        $(".accordion-list > li.active .answer").slideUp();
+        $(".accordion-list > li.active").removeClass("active");
+        $(this).addClass("active").find(".answer").slideDown();
+      }
+      return false;
     });
-   
-    $('.scrollToTop').click(function() {
-        $('html, body').animate({
-            scrollTop: 0
-        }, 700);
-        return false;
-    });
-
-    $('.problem__slider').slick({
-        centerMode: true,        
-        centerPadding: '60px',
-        slidesToShow: 5,        
-        prevArrow: `<button type="button" class="slick-prev"><img src="../img/image/arrow-left.png" alt=""></button>`,
-        nextArrow: `<button type="button" class="slick-next"><img src="../img/image/arrow-right.png" alt=""></button>`,
-        responsive: [
-          {
-            breakpoint: 1600,
-            settings: {
-              arrows: true,
-              centerMode: true,
-              centerPadding: '40px',
-              slidesToShow: 3
-            }
-          },
-          {
-            breakpoint: 992,
-            settings: {
-              arrows: true,
-              centerMode: false,
-              centerPadding: '40px',
-              slidesToShow: 3
-            }
-          },
-          {
-            breakpoint: 880,
-            settings: {
-              arrows: false,
-              centerMode: false,
-              dots:true,
-              centerPadding: '40px',
-              slidesToShow: 2
-            }
-          },
-          {
-            breakpoint: 600,
-            settings: {
-              arrows: false,
-              dots:true,
-              centerMode: false,
-              centerPadding: '40px',
-              slidesToShow: 1
-            }
-          }
-        ]
+    // sliderLength ===================================================
+    function sliderLength ( sliderName,lengthItem) {
+      $(sliderName).on('init', function(event, slick){        
+        let sliderleng = slick.$slides.length;
+        let itemLenght = document.querySelector(lengthItem);
+          
+        itemLenght.textContent = sliderleng; 
       });
-   
-    // acordeon
-  
-  $('.accordion-list > li > .answer').hide();
-    
-  $('.accordion-list > li').click(function() {
-    if ($(this).hasClass("active")) {
-      $(this).removeClass("active").find(".answer").slideUp();
-    } else {
-      $(".accordion-list > li.active .answer").slideUp();
-      $(".accordion-list > li.active").removeClass("active");
-      $(this).addClass("active").find(".answer").slideDown();
     }
-    return false;
-  });
-	       
-     
-});
+    sliderLength('.slider-nav', '.lengh-item');
+    sliderLength('.feedback__slider', '.feedback__slider-lenght');
+    sliderLength('.products__slider', '.products__controls-lenght');
+    // slick slider ===================================================
+    $('.slider-for').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows:false,
+      asNavFor: '.slider-nav',
+    });
+    $('.slider-nav').slick({
+      arrows:true,
+      nextArrow:'<button type="button" class="slick-next"><img src="./img/images/next.png" alt=""></button>',
+      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/pref.png" alt=""></button>',      
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      fade: true,
+      asNavFor: '.slider-for',
+    });
 
-var wow = new WOW(
-  {
-    boxClass:     'wow',      // animated element css class (default is wow)
-    animateClass: 'animated', // animation css class (default is animated)
-    offset:       0,          // distance to the element when triggering the animation (default is 0)
-    mobile:       true,       // trigger animations on mobile devices (default is true)
-    live:         true,       // act on asynchronously loaded content (default is true)
-    callback:     function(box) {
-      // the callback is fired every time an animation is started
-      // the argument that is passed in is the DOM node being animated
-    },
-    scrollContainer: null,    // optional scroll container selector, otherwise use window,
-    resetAnimation: true,     // reset animation on end (default is true)
-  }
-);
-wow.init();
+    $('.feedback__slider').slick({
+      slidesToShow: 3,      
+      centerMode: true,
+      appendArrows: $('.feedback__counter-slider'),
+      arrows:true,      
+      nextArrow:'<button type="button" class="slick-next"><img src="./img/images/arrow_white-next_24px.png" alt=""></button>',
+      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/arrow_white_24px.png" alt=""></button>',
+      responsive: [
+        {
+          breakpoint: 1100,
+          settings: {
+            slidesToShow: 2,
+          }
+        },
+        {
+          breakpoint: 740,
+          settings: {
+            slidesToShow: 1,
+            centerMode:true,            
+          }
+        },
+        {
+          breakpoint: 540,
+          settings: {     
+            slidesToShow: 1,       
+            centerMode:false,            
+          }
+        },                
+      ]      
+    });
+    $('.products__slider').slick({
+      slidesToShow: 4,  
+      variableWidth: true,
+      infinite: true,
+      appendArrows: $('.products__controls-slider'),
+      arrows:true,      
+      nextArrow:'<button type="button" class="slick-next"><img src="./img/images/arrow_white-next_24px.png" alt=""></button>',
+      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/arrow_white_24px.png" alt=""></button>',
+            
+    });
+    // slider counter =====================================
+    function counterSlider (sliderName, counterId) {                      
+      $(sliderName).on('afterChange', function(event, slick, currentSlide){              
+        $(counterId).text(currentSlide+1);
+      });
+    }
+    counterSlider('.slider-nav', "#cp");
+    counterSlider('.feedback__slider', "#cp-2");
+    counterSlider('.products__slider', "#cp-3");
+    console.log($("#audio-player")[0]);
+});
