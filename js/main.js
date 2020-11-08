@@ -57,6 +57,16 @@ function progressBarrUse () {
 // Progressbarr ====================================================
 
 $(function(){
+  // прокрутка к якорю
+  $('.go-to').click( function(e){ // ловим клик по ссылке с классом go_to
+    e.preventDefault();
+      var scroll_el = $(this).attr('href'); // возьмем содержимое атрибута href, должен быть селектором, т.е. например начинаться с # или .
+          if ($(scroll_el).length != 0) { // проверим существование элемента чтобы избежать ошибки
+        $('html, body').animate({ scrollTop: $(scroll_el).offset().top }, 500); // анимируем скроолинг к элементу scroll_el
+          }
+        return false; // выключаем стандартное действие
+      }); 
+
     $('.open-bascket').click(function () {
       $('#exampleModal').arcticmodal();
     })
@@ -86,24 +96,16 @@ $(function(){
         itemLenght.textContent = sliderleng; 
       });
     }
-    sliderLength('.slider-nav', '.lengh-item');
+    sliderLength('.selections__slider', '.lengh-item');
     sliderLength('.feedback__slider', '.feedback__slider-lenght');
     sliderLength('.products__slider', '.products__controls-lenght');
     // slick slider ===================================================
-    $('.slider-for').slick({
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows:false,
-      asNavFor: '.slider-nav',
-    });
-    $('.slider-nav').slick({
+      $('.selections__slider').slick({
       arrows:true,
       nextArrow:'<button type="button" class="slick-next"><img src="./img/images/next.png" alt=""></button>',
       prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/pref.png" alt=""></button>',      
       slidesToShow: 1,
-      slidesToScroll: 1,
-      fade: true,
-      asNavFor: '.slider-for',
+      slidesToScroll: 1,           
     });
 
     $('.feedback__slider').slick({
@@ -152,8 +154,7 @@ $(function(){
         $(counterId).text(currentSlide+1);
       });
     }
-    counterSlider('.slider-nav', "#cp");
+    counterSlider('.selections__slider', "#cp");
     counterSlider('.feedback__slider', "#cp-2");
-    counterSlider('.products__slider', "#cp-3");
-    console.log($("#audio-player")[0]);
+    counterSlider('.products__slider', "#cp-3");    
 });
