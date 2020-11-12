@@ -242,6 +242,10 @@ h5 {
   transition: all .3s ease;
 }
 
+.btn-black img {
+  margin-right: 10px;
+}
+
 .btn-black:hover {
   background-color: transparent;
   color: #000;
@@ -742,8 +746,60 @@ h5 {
   margin-right: 15px;
 }
 
+.header .basket-btn {
+  max-width: 138px;
+  padding: 12px;
+  margin: 0 15px 0 auto;
+  position: relative;
+}
+
+.header .basket-btn:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.header .basket-counter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50px;
+  background-color: #E83628;
+  position: absolute;
+  top: 10px;
+  left: 33px;
+  color: #fff;
+}
+
 .header__logo {
-  max-width: 200px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 195px;
+          flex: 0 0 195px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 195px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.header__logo img {
+  width: 62px;
+  height: 62px;
+  margin-right: 5px;
 }
 
 .header__register {
@@ -1033,6 +1089,8 @@ h5 {
 
 .selections__sliders-wrapper {
   position: relative;
+  max-width: 1250px;
+  margin: 0 auto;
 }
 
 .selections__sliders-wrapper .counter-slider {
@@ -2567,22 +2625,35 @@ ul.accordion-list li div.answer p {
   }
 
   .selections .slick-arrow {
-    bottom: 30%;
+    bottom: 31%;
   }
 
   .selections .slick-arrow.slick-prev {
-    left: 10px;
+    left: 30px;
   }
 
   .selections .slick-arrow.slick-next {
     left: 100%;
-    -webkit-transform: translateX(-120%);
-        -ms-transform: translateX(-120%);
-            transform: translateX(-120%);
+    -webkit-transform: translateX(-160%);
+        -ms-transform: translateX(-160%);
+            transform: translateX(-160%);
   }
 
   .header {
     min-height: auto;
+  }
+
+  .header__register {
+    padding: 0;
+    border: none;
+  }
+
+  .header__register span {
+    display: none;
+  }
+
+  .header__register img {
+    margin-right: 0;
   }
 
   .header__bottom-body {
@@ -2746,6 +2817,10 @@ ul.accordion-list li div.answer p {
     text-align: center;
   }
 
+  .header__logo {
+    text-align: start;
+  }
+
   .header .btn-more {
     margin: 0 auto;
   }
@@ -2832,21 +2907,6 @@ ul.accordion-list li div.answer p {
         -ms-flex-order: 3;
             order: 3;
     margin: 0 0 0 10px;
-  }
-}
-
-@media (max-width: 600px) {
-  .header__register {
-    padding: 0;
-    border: none;
-  }
-
-  .header__register span {
-    display: none;
-  }
-
-  .header__register img {
-    margin-right: 0;
   }
 }
 
@@ -3025,16 +3085,17 @@ ul.accordion-list li div.answer p {
 
 @media (max-width: 500px) {
   .selections .slick-arrow {
-    bottom: 10px;
+    bottom: 62px;
   }
 
   .selections__sliders-wrapper .counter-slider {
-    bottom: -40px;
+    bottom: 25px;
+    font-size: 25px;
     left: 50%;
     -webkit-transform: translateX(-50%);
         -ms-transform: translateX(-50%);
             transform: translateX(-50%);
-    color: #000;
+    color: #fff;
   }
 
   .selections__content-left {
@@ -3042,12 +3103,46 @@ ul.accordion-list li div.answer p {
   }
 
   .selections__slider-content-right {
-    padding: 0px;
+    padding: 0px 20px 20px;
+    background-color: #3e3a39;
   }
 
   .selections__product {
-    padding: 10px;
-    background-color: #3e3a39;
+    padding: 0px 0 40px 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .selections__product-title {
+    border-radius: 5px;
+  }
+
+  .product-list__item {
+    margin-left: 5px;
+  }
+}
+
+@media (max-width: 450px) {
+  .header .basket-btn {
+    position: fixed;
+    right: 0;
+    top: 80px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+  }
+
+  .header .basket-btn .basket-text {
+    display: none;
+  }
+
+  .header .basket-btn img {
+    margin: 0;
+  }
+
+  .header .basket-counter {
+    left: 28px;
   }
 }
 @supports (-webkit-appearance:none){
@@ -3120,14 +3215,6 @@ ul.accordion-list li div.answer p {
 
 }
 
- @media (max-width: 600px){
-
-@supports (-webkit-appearance:none){
-
-}
-
-}
-
  @media (max-width: 550px){
 
 @supports (-webkit-appearance:none){
@@ -3137,6 +3224,14 @@ ul.accordion-list li div.answer p {
 }
 
  @media (max-width: 500px){
+
+@supports (-webkit-appearance:none){
+
+}
+
+}
+
+ @media (max-width: 450px){
 
 @supports (-webkit-appearance:none){
 
