@@ -96,48 +96,18 @@ $(function(){
         itemLenght.textContent = sliderleng; 
       });
     }
-    sliderLength('.selections__slider', '.lengh-item');
-    sliderLength('.feedback__slider', '.feedback__slider-lenght');
+    sliderLength('.selections__slider', '.lengh-item');    
     sliderLength('.products__slider', '.products__controls-lenght');
     // slick slider ===================================================
       $('.selections__slider').slick({
       arrows:true,
-      nextArrow:'<button type="button" class="slick-next"><img src="./img/images/next.png" alt=""></button>',
-      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/pref.png" alt=""></button>',      
-      slidesToShow: 1,
-      slidesToScroll: 1,           
-    });
-
-    $('.feedback__slider').slick({
-      slidesToShow: 3,      
-      centerMode: true,
-      appendArrows: $('.feedback__counter-slider'),
-      arrows:true,      
       nextArrow:'<button type="button" class="slick-next"><img src="./img/images/arrow_white-next_24px.png" alt=""></button>',
-      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/arrow_white_24px.png" alt=""></button>',
-      responsive: [
-        {
-          breakpoint: 1100,
-          settings: {
-            slidesToShow: 2,
-          }
-        },
-        {
-          breakpoint: 740,
-          settings: {
-            slidesToShow: 1,
-            centerMode:true,            
-          }
-        },
-        {
-          breakpoint: 540,
-          settings: {     
-            slidesToShow: 1,       
-            centerMode:false,            
-          }
-        },                
-      ]      
+      prevArrow:'<button type="button" class="slick-prev"><img src="./img/images/arrow_white_24px.png" alt=""></button>',     
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      adaptiveHeight:true,           
     });
+    
     $('.products__slider').slick({
       slidesToShow: 4,  
       variableWidth: true,
@@ -154,7 +124,6 @@ $(function(){
         $(counterId).text(currentSlide+1);
       });
     }
-    counterSlider('.selections__slider', "#cp");
-    counterSlider('.feedback__slider', "#cp-2");
+    counterSlider('.selections__slider', "#cp");   
     counterSlider('.products__slider', "#cp-3");    
 });
