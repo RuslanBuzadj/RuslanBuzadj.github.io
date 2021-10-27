@@ -1,0 +1,66 @@
+.container {
+  width:800px; 
+  background:#fff;
+  margin:0 auto;
+  padding:1em;
+}
+
+body {
+  padding:0;
+  margin:0;
+  font-family: 'Ubuntu', sans-serif;
+  background-image:url(img/triangle-mosaic.png);
+  font-size: 1.4em;
+}
+
+.photo {
+  width:800px;
+}
+
+h1, h2, h3, h4 {
+	font-family:'Monntserrat', sans-serif;
+}
+p, cite {
+	font-size: 0.8em;
+	text-align:justify;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+nav {
+	text-align:center;
+	padding: 1.2em;
+	font-size:0.9em;
+}
+
+nav a:link {
+	text-transform:uppercase;
+	text-decoration:none;
+	font-weight:700;
+	letter-spacing:0.04em;
+	background:#5f2c31;
+	color:#fff;
+	padding:0.8em 1em; 
+	margin:0 0.5em;
+	border-radius:0.5em;
+}
+
+a:active {
+	
+}
+
+a:visited {
+	color:#fff;
+}
+
+a:hover {
+	background:#a13a44;
+	color:#5f2c31;
+	border-bottom:0.2em solid #5f2c31;
+}
