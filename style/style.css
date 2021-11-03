@@ -61,12 +61,12 @@ p {
 	margin:0 auto;
 	padding:1em;
 	background-color:rgba(214, 72, 98, 0.2);
-	text-align: justify;
+	text-align:justify;
 }
 .container h3 {
 	font-size:2em;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
+	text-transform:uppercase;
+	letter-spacing:0.06em;
 	text-align:center;
 }
 .photo {
